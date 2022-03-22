@@ -1,0 +1,63 @@
+/* Chrome, Safari, Edge, Opera */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+input[type=number] {
+  -moz-appearance: textfield;
+}
+
+@media (max-width:576px) {
+    h1 {
+        font-size: 40px;
+    }
+    h2 {
+        font-size: 30px;
+    }
+}
+
+@-webkit-keyframes notify {
+  0% {transform: scaleX(0);}
+  10% {transform: scaleX(1);}
+  13% {transform: scale(1.1);}
+  16% {transform: scale(1);}
+  55% {transform: scaleX(1); border-radius: 0%;}
+  65% {transform: scaleX(0.25); border-radius: 50%;}
+  95% {transform: scaleX(0.25); border-radius: 50%;}
+  100% {transform: scaleX(0);}
+}
+
+@keyframes notify {
+  0% {transform: scaleX(0);}
+  10% {transform: scaleX(1);}
+  13% {transform: scale(1.1);}
+  16% {transform: scale(1);}
+  55% {transform: scaleX(1); border-radius: 0%;}
+  65% {transform: scaleX(0.25); border-radius: 50%;}
+  95% {transform: scaleX(0.25); border-radius: 50%;}
+  100% {transform: scaleX(0);}
+}
+
+.custom-notification {
+  height: 8%;
+  width: 20%;
+  background-color: #C1F7EE;
+  margin-top: 5%;
+  margin-left: 76%;
+  transform-origin: right;
+  -webkit-animation: notify 3s ease-in-out infinite;
+  animation: notify 3s ease-in-out infinite;
+}
+
+a{
+  text-decoration: none;
+  color: darkgray;
+}
+
+a:hover{
+  text-decoration: none;
+  color: darkgray;
+}
