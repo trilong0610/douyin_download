@@ -23,9 +23,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-)sknn1a=+2s-^zay_=l@lm$&l3@*x1l8t5%@z4c*$t$y+ltdb0'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
-ALLOWED_HOSTS = ["teont.me", "178.128.104.117"]
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition

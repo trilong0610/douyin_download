@@ -6,6 +6,7 @@ from django.views import View
 from moviepy.video.fx import crop
 from moviepy.editor import VideoFileClip, vfx
 import requests
+import re
 import urllib.request
 import time
 from django.conf import settings
@@ -20,14 +21,15 @@ class upload_url(View):
 
     def post(self, request):
         # Lấy link tiktok
-        url = request.POST['url']
+        req_url = request.POST['url']
+        url = find_url(req_url)
 
-        # Lấy link tải video từ api
+        # # Lấy link tải video từ api
         json = get_info_video(url=url)
 
         info_video = resize_video(json)
 
-        # fill these variables with real values
+        # # fill these variables with real values
         filename = info_video['name_video']
         filepath = info_video['path_video']
         with open(filepath, 'rb') as fh:
@@ -77,6 +79,8 @@ def resize_video(info_video):
 
     path_video = "%s/%s" % (MEDIA_ROOT, name_video)
 
+    path_video_old = "%s/%s" % (MEDIA_ROOT, name_video)
+
     clip.write_videofile(path_video)
 
     os.remove(info_video['path_video'])
@@ -85,3 +89,10 @@ def resize_video(info_video):
         "path_video": path_video,
         "name_video": name_video
     }
+
+
+def find_url(string):
+    # Parse the link in the Douyin share password and return to the list
+    url = re.findall(
+        'http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+', string)
+    return url[0]
