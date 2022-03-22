@@ -24,5 +24,6 @@ app_name = 'douyin'
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', views.upload_url.as_view(), name='upload'),
+    path('no_edit/', views.getVideoNoEdit.as_view(), name='no_edit'),
 ]
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
