@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django.contrib.humanize',
     'douyin',
+    'video',
 ]
 
 MIDDLEWARE = [
@@ -77,8 +78,12 @@ WSGI_APPLICATION = 'douyin.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'djongo',
+        'CLIENT': {
+            'host': 'mongodb+srv://root:trilong0610@douyin.j18yb.mongodb.net/myFirstDatabase?retryWrites=true&w=majority',
+            'name': 'douyin',
+            'authMechanism': 'SCRAM-SHA-1'
+        },
     }
 }
 

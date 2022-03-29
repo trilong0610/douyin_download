@@ -25,5 +25,6 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', views.downVideoEdit.as_view(), name='upload'),
     path('no_edit/', views.downVideoNoEdit.as_view(), name='no_edit'),
+    path('add_author/', views.downVideoAuthor.as_view(), name='add_author'),
 ]
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

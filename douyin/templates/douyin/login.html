@@ -18,10 +18,10 @@
     <!-- Start: row-form-login -->
     <div class="row d-flex justify-content-lg-center mb-3" style="margin: 0 auto;width: 100%;">
         <!-- DIV Tải video chưa edit -->
-        <div class="col-lg-6 col-sm-12 col-12 col-md-6">
+        <div class="col-lg-4 col-sm-12 col-12 col-md-6">
             <div class=" shadow-sm p-5" style="border-radius: 25px;background: var(--white);margin: 40px 0;">
                 <div class="text-center">
-                    <h4 class="text-dark mb-4" style="color: rgb(0,0,0);">Dán liên kết video vào đây</h4>
+                    <h4 class="text-dark mb-4" style="color: rgb(0,0,0);">Không Logo</h4>
                 </div><!-- Start: form-login -->
                 <form method="post" action="{% url 'no_edit' %}" class="user" style="margin-top: 40px;">
                     {% csrf_token %}
@@ -30,6 +30,7 @@
                         <input name="url" id="loginUsername" class="form-control form-control-user" type="text"
                             placeholder="Liên kết">
                     </div><!-- End: user -->
+                    
                     <!-- Start: btn-login -->
                     <button class="btn btn-primary btn-block text-white btn-user" type="submit"
                         style="margin-top: 40px;">
@@ -50,10 +51,10 @@
         <!-- END DIV Tải video chưa edit -->
 
         <!-- DIV Tải video đã edit -->
-        <div class="col-lg-6 col-sm-12 col-12 col-md-6">
+        <div class="col-lg-4 col-sm-12 col-12 col-md-6">
             <div class="shadow-sm p-5" style="border-radius: 25px;background: var(--white);margin: 40px 0;">
                 <div class="text-center">
-                    <h4 class="text-dark mb-4" style="color: rgb(0,0,0);">Dán liên kết video vào đây</h4>
+                    <h4 class="text-dark mb-4" style="color: rgb(0,0,0);">Không logo + Edit</h4>
                 </div><!-- Start: form-login -->
                 <form method="post" action="{% url 'upload' %}" class="user" style="margin-top: 40px;">
                     {% csrf_token %}
@@ -78,6 +79,64 @@
                     <hr>
                 </form><!-- End: form-login -->
             </div>
+
+        </div>
+        <!-- END DIV Tải video đã edit -->
+
+        <!-- DIV Thêm tài khoản crawm -->
+        <div class="col-lg-4 col-sm-12 col-12 col-md-6">
+            <div class="shadow-sm p-5" style="border-radius: 25px;background: var(--white);margin: 40px 0;">
+                <div class="text-center">
+                    <h4 class="text-dark mb-4" style="color: rgb(0,0,0);">Tải hàng loạt</h4>
+                </div><!-- Start: form-login -->
+                <form method="post" action="{% url 'add_author' %}" class="user" style="margin-top: 40px;">
+                    {% csrf_token %}
+                    
+                    <!-- Start: user -->
+                    <div class="form-group row">
+                        <input name="url_author"  class="form-control form-control-user" type="text"
+                            placeholder="Liên kết trang cá nhân">
+                    </div><!-- End: user -->
+
+                    <div class="form-group row">
+                        <input name="count_vid"  class="form-control form-control-user" type="number"
+                            placeholder="Số lượng video">
+                    </div><!-- End: user -->
+                    
+                    <!-- Checkbox loop video -->
+                    <div class="form-check">
+                        <input class="form-check-input" value="on" type="radio" name="checkbox_video" id="flexRadioDefault1">
+                        <label class="form-check-label" for="flexRadioDefault1">
+                          Tải tất cả
+                        </label>
+                      </div>
+                      <div class="form-check">
+                        <input class="form-check-input" value="off" type="radio" name="checkbox_video" id="flexRadioDefault2" checked>
+                        <label class="form-check-label" for="flexRadioDefault2">
+                          Không tải video từng tải
+                        </label>
+                      </div>
+                    <!-- End Checkbox loop video -->    
+                        
+                        
+                    <!-- Start: btn-login -->
+                    <button class="btn btn-primary btn-block text-white btn-user" type="submit"
+                        style="margin-top: 40px;">
+                        Tải hàng loạt
+                    </button><!-- End: btn-login -->
+                    
+                    {% if messages %}
+                    {% for message in messages %}
+                    <div class="alert alert-danger" role="alert" style="margin: 20px">
+                        {{ message }}
+                    </div>
+                    {% endfor %}
+                    {% endif %}
+
+                    <hr>
+                </form><!-- End: form-login -->
+            </div>
+            
 
         </div>
         <!-- END DIV Tải video đã edit -->

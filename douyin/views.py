@@ -1,4 +1,6 @@
+from itertools import count
 import ssl
+from sys import flags
 from django.http import HttpResponse
 from django.shortcuts import redirect, render
 from django.views import View
@@ -11,7 +13,9 @@ import time
 from django.conf import settings
 import os
 from douyin.settings import MEDIA_ROOT
-import mimetypes
+from video.models import Video
+from video.views import *
+import shutil
 
 header = {
     'User-Agent': 'Mozilla/5.0 (iPhone; CPU iPhone OS 11_0 like Mac OS X) AppleWebKit/604.1.38 (KHTML, like Gecko) Version/11.0 Mobile/15A372 Safari/604.1',
@@ -41,8 +45,8 @@ class downVideoEdit(View):
 
         with open(filepath, 'rb') as fh:
             response = HttpResponse(
-                fh.read(), content_type='application/adminupload')
-            response['Content-Disposition'] = "inline; filename=%s" % filename
+                fh.read(), content_type='video/mp4')
+            response['Content-Disposition'] = "attachment; filename=%s" % (filename)
         return response
 
 
@@ -65,9 +69,93 @@ class downVideoNoEdit(View):
         filepath = json['path_video']
         with open(filepath, 'rb') as fh:
             response = HttpResponse(
-                fh.read(), content_type='application/adminupload')
-            response['Content-Disposition'] = "inline; filename=%s" % filename
+                fh.read(), content_type='video/mp4')
+            response['Content-Disposition'] = "attachment; filename=%s" % (filename)
         return response
+
+class downVideoAuthor(View):
+    def post(self, request):
+        
+        # Lay sec_id tu nguoi dung de lay toan bo video
+        save_info = {}
+        url_author = request.POST['url_author']
+        count_vid = request.POST['count_vid']
+        checkbox_video = request.POST['checkbox_video']
+
+        print('count_vid------ ' +  str(count_vid))
+    
+        sec_uid = get_sec_uid(url_author)
+        
+        # Lay danh sach video
+        json_data = get_all_posts(sec_uid=sec_uid, count_vid=count_vid)
+
+        print('aweme_list: ' + str(len(json_data['aweme_list'])) )
+
+        # Kiem tra video co ton tai chua
+        # Neu checkbox = true va chua ton tai thi tai
+        nick_name = json_data['aweme_list'][0]['author']['nickname']
+        short_id = json_data['aweme_list'][0]['author']['short_id']
+
+        folder_name = "%s_%s_%d" % (
+                nick_name, short_id, time.time_ns())
+
+        folder_path = "assets/videos/%s" % (folder_name)
+        # Tai video da co tren db
+        if  checkbox_video == 'on': 
+            print('status_checkbox: on')
+
+            for json in json_data['aweme_list']:
+                
+                url_video = json['video']["play_addr"]['url_list'][2]
+                id_video = json['aweme_id']
+                
+                # Neu video chua co tren db thi luu len db
+                if not Video.objects.filter(id_video = id_video).exists():
+                    video = Video.objects.create(id_video= id_video, sec_uid= sec_uid)
+                    video.save()
+
+                video_name = "%s_%d.mp4" % (short_id, int(time.time_ns()))
+
+                video_path = "assets/videos/%s/%s" % (folder_name, video_name)
+                # Tai video - luu ve may
+                save_video_author(video_path=video_path, folder_path=folder_path,url_video=url_video)
+                time.sleep(0.2)
+        # Ko Tai video da luu
+        else:
+            print('status_checkbox: off')
+            
+            for json in json_data['aweme_list']:
+                
+                url_video = json['video']["play_addr"]['url_list'][2]
+                id_video = json['aweme_id']
+                
+                #Kiem tra video da luu hay chua
+                if not Video.objects.filter(id_video = id_video).exists(): #video chua duoc luu
+                # Tai video - luu ve may
+                    video_name = "%s_%d.mp4" % (short_id, int(time.time_ns()))
+                    video_path = "assets/videos/%s/%s" % (folder_name, video_name)
+
+                    save_video_author(video_path=video_path, folder_path=folder_path,url_video=url_video)
+                    # Luu id video len db
+                    video = Video.objects.create(id_video= id_video, sec_uid= sec_uid)
+                    video.save()
+                    time.sleep(0.2)    
+            
+        print("Đã lưu toàn bô video")
+        try: # Neu co tai ve video tu author
+            save_path =  shutil.make_archive(folder_name, 'zip', folder_path)
+            response = HttpResponse(open(save_path, 'rb'))
+            response['Content-Disposition'] = 'attachment; filename=%s' % (folder_name)
+            response['Content-Type'] = 'application/zip'
+            return response
+        except:
+            return HttpResponse('Không tồn tại video để tải về, vui lòng thử lại')
+        print(save_path)
+
+        # with open(save_path, 'rb') as fd:
+        #     response = HttpResponse(fd.read(), content_type='application/x-zip-compressed')
+        #     response['Content-Disposition'] = "attachment; filename=%s.zip" % folder_name
+        
 
 
 def get_info_video(url):
@@ -174,3 +262,4 @@ def save_video(id_video):
         "path_video": path_video,
         "name_video": name_video
     }
+ 
